@@ -50,8 +50,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 
 // if you have students routes:
-const studentRoutes = require("./routes/students");
-app.use("/api/students", studentRoutes);
+//const studentRoutes = require("./routes/students");
+//app.use("/api/students", studentRoutes);
 
 // 7. 404 handler AFTER all routes
 app.use((req, res) => {
