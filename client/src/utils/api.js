@@ -2,7 +2,7 @@ import axios from "axios";
 
 const API_URL =
   process.env.REACT_APP_API_URL ||
-  "https://your-render-app.onrender.com/api";
+  "https://student-entry-management-system.onrender.com/api";
 
 // Create ONE axios instance
 const api = axios.create({
