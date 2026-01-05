@@ -1,13 +1,7 @@
-const express = require("express");
+const router = require("express").Router();
 const { login } = require("../controllers/authController");
 
-const router = express.Router();
-
-// 🔥 Handle preflight for login
-router.options("/login", (req, res) => {
-  res.sendStatus(200);
-});
-
+// No need for manual OPTIONS here if app.options("*", ...) is above.
 router.post("/login", login);
 
 module.exports = router;
