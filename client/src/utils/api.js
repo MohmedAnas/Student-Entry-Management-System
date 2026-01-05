@@ -1,23 +1,31 @@
-import axios from 'axios';
+import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+const API_URL =
+  process.env.REACT_APP_API_URL ||
+  "https://your-render-app.onrender.com/api";
+
+// Create ONE axios instance
+const api = axios.create({
+  baseURL: API_URL,
+  withCredentials: true // 🔥 THIS FIXES CORS
+});
 
 export const addStudent = async (data) => {
-  const response = await axios.post(`${API_URL}/students`, data);
+  const response = await api.post("/students", data);
   return response.data;
 };
 
 export const getStudents = async () => {
-  const response = await axios.get(`${API_URL}/students`);
+  const response = await api.get("/students");
   return response.data;
 };
 
 export const updateStudent = async (index, data) => {
-  const response = await axios.put(`${API_URL}/students/${index}`, data);
+  const response = await api.put(`/students/${index}`, data);
   return response.data;
 };
 
 export const login = async (credentials) => {
-  const response = await axios.post(`${API_URL}/auth/login`, credentials);
+  const response = await api.post("/auth/login", credentials);
   return response.data;
 };
