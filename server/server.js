@@ -48,7 +48,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
-const studentRoutes = require("./routes/studentroutes");  // your file name
+const studentRoutes = require("./routes/studentRoutes");  // your file name
 app.use("/api/students", studentRoutes);
 
 // 7. 404 handler AFTER all routes
