@@ -18,7 +18,7 @@ export default function Contact() {
             <EmailIcon sx={{ color: '#0F766E', mr: 2, fontSize: 30 }} />
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Email</Typography>
-              <Typography>contact@dataentry.com</Typography>
+              <Typography>sranawadia@gmail.com</Typography>
             </Box>
           </Box>
 
@@ -26,7 +26,7 @@ export default function Contact() {
             <PhoneIcon sx={{ color: '#0F766E', mr: 2, fontSize: 30 }} />
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Phone</Typography>
-              <Typography>+91 1234567890</Typography>
+              <Typography>+91 9898142823</Typography>
             </Box>
           </Box>
 
@@ -34,7 +34,7 @@ export default function Contact() {
             <LocationOnIcon sx={{ color: '#0F766E', mr: 2, fontSize: 30 }} />
             <Box>
               <Typography variant="h6" sx={{ fontWeight: 'bold' }}>Address</Typography>
-              <Typography>123 Business Street, City, State 123456</Typography>
+              <Typography>Mira Compex, Opp. L.I.C Office, Above Phone Wale shworoom, Nyay Mandir Himatnagar</Typography>
             </Box>
           </Box>
         </Paper>
