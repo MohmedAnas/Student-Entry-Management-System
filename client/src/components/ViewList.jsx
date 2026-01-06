@@ -23,7 +23,8 @@ export default function ViewList() {
     if (search) {
       const filtered = students.filter(student =>
         student.name.toLowerCase().includes(search.toLowerCase()) ||
-        student.mobileNo.includes(search)
+        student.mobileNo.includes(search) ||
+        student.admissionNo.toLowerCase().includes(search.toLowerCase())
       );
       setFilteredStudents(filtered);
     } else {
@@ -81,7 +82,7 @@ export default function ViewList() {
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
         <TextField
-          label="Search by Name or Mobile No"
+          label="Search by Name, Mobile No, or Admission No"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           fullWidth
@@ -95,7 +96,7 @@ export default function ViewList() {
           <Table>
             <TableHead sx={{ bgcolor: '#0F766E' }}>
               <TableRow>
-                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>ID</TableCell>
+                <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Admission No</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Name</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Mobile No</TableCell>
                 <TableCell sx={{ fontWeight: 'bold', color: '#fff' }}>Email</TableCell>
@@ -117,7 +118,7 @@ export default function ViewList() {
                   transition={{ delay: index * 0.05 }}
                   sx={{ '&:nth-of-type(even)': { bgcolor: 'rgba(15,118,110,0.05)' } }}
                 >
-                  <TableCell>{student.id}</TableCell>
+                  <TableCell>{student.admissionNo}</TableCell>
                   <TableCell>
                     <Typography
                       sx={{
