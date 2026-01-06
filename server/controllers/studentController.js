@@ -6,10 +6,10 @@ const addStudent = async (req, res) => {
     const studentData = req.body;
     
     // Validate required fields
-    if (!studentData.name || !studentData.mobileNo || !studentData.email) {
+    if (!studentData.admissionNo || !studentData.name || !studentData.mobileNo || !studentData.email) {
       return res.status(400).json({
         success: false,
-        message: 'Name, mobile number, and email are required'
+        message: 'Admission number, name, mobile number, and email are required'
       });
     }
     
