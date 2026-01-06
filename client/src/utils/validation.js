@@ -1,6 +1,7 @@
 export const validateForm = (data) => {
   const errors = {};
 
+  if (!data.admissionNo?.trim()) errors.admissionNo = 'Admission number is required';
   if (!data.name?.trim()) errors.name = 'Name is required';
   
   if (!data.mobileNo) {
