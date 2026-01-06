@@ -5,7 +5,7 @@ const auth = new google.auth.GoogleAuth({
     type: 'service_account',
     project_id: process.env.GOOGLE_PROJECT_ID,
     private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID,
-    private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    private_key: process.env.GOOGLE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
     client_email: process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL,
     client_id: process.env.GOOGLE_CLIENT_ID,
     auth_uri: 'https://accounts.google.com/o/oauth2/auth',
@@ -20,48 +20,30 @@ const sheets = google.sheets({ version: 'v4', auth });
 
 const appendToSheet = async (studentData) => {
   try {
-    // Get all data to find the highest ID
-    const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:I'
-    });
-    
-    const rows = response.data.values || [];
-    
-    // Generate next ID by finding the highest existing ID
-    let nextId = 1;
-    if (rows.length > 1) {
-      // Skip header row and find max ID
-      const existingIds = rows.slice(1)
-        .map(row => parseInt(row[0]))
-        .filter(id => !isNaN(id));
-      
-      if (existingIds.length > 0) {
-        nextId = Math.max(...existingIds) + 1;
-      }
-    }
-    
-    console.log('Generated ID:', nextId);
+    console.log('Student data received in appendToSheet:', studentData);
+    console.log('Course price:', studentData.coursePrice);
     
     const values = [
       [
-        nextId,
+        studentData.admissionNo || '',
         studentData.name || '',
         studentData.mobileNo || '',
         studentData.email || '',
         studentData.address || '',
         studentData.admissionDate || '',
         studentData.courseName || '',
+        studentData.coursePrice ? String(studentData.coursePrice) : '',
         studentData.courseCompletionDate || '',
-        studentData.certificateIssueDate || ''
+        studentData.certificateIssueDate || '',
+        studentData.remarks || ''
       ]
     ];
     
-    console.log('Appending values:', values);
+    console.log('Values to append:', values);
     
     const appendResponse = await sheets.spreadsheets.values.append({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:I',
+      range: 'Sheet1!A:K',
       valueInputOption: 'RAW',
       resource: { values }
     });
@@ -77,21 +59,23 @@ const readFromSheet = async () => {
   try {
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: 'Sheet1!A:I'
+      range: 'Sheet1!A:K'
     });
     
     const rows = response.data.values || [];
-    // Skip header row and map data correctly with ID as first column
+    // Skip header row and map data correctly with admission number as first column
     return rows.slice(1).map(row => ({
-      id: row[0] || '',
+      admissionNo: row[0] || '',
       name: row[1] || '',
       mobileNo: row[2] || '',
       email: row[3] || '',
       address: row[4] || '',
       admissionDate: row[5] || '',
       courseName: row[6] || '',
-      courseCompletionDate: row[7] || '',
-      certificateIssueDate: row[8] || ''
+      coursePrice: row[7] || '',
+      courseCompletionDate: row[8] || '',
+      certificateIssueDate: row[9] || '',
+      remarks: row[10] || ''
     }));
   } catch (error) {
     throw new Error('Failed to read from sheet: ' + error.message);
@@ -102,21 +86,23 @@ const updateSheet = async (rowIndex, studentData) => {
   try {
     const values = [
       [
-        studentData.id, // Keep existing ID
+        studentData.admissionNo,
         studentData.name,
         studentData.mobileNo,
         studentData.email,
         studentData.address,
         studentData.admissionDate,
         studentData.courseName,
+        studentData.coursePrice ? String(studentData.coursePrice) : '',
         studentData.courseCompletionDate || '',
-        studentData.certificateIssueDate || ''
+        studentData.certificateIssueDate || '',
+        studentData.remarks || ''
       ]
     ];
     
     const response = await sheets.spreadsheets.values.update({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      range: `Sheet1!A${rowIndex + 2}:I${rowIndex + 2}`,
+      range: `Sheet1!A${rowIndex + 2}:K${rowIndex + 2}`,
       valueInputOption: 'RAW',
       resource: { values }
     });
