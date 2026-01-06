@@ -7,45 +7,66 @@ import dayjs from 'dayjs';
 import { validateEditForm } from '../utils/validation';
 
 const courses = [
-  'Full Stack Development',
-  'Data Science', 
-  'Web Development',
-  'Graphic Designing',
-  'Cloud Computing'
+  { name: 'MS - Office 2007', price: 1500 },
+  { name: 'Logo Design', price: 1000 },
+  { name: 'D.T.P', price: 2500 },
+  { name: 'Tally ERP 9', price: 1500 },
+  { name: 'KIDS Course', price: 1000 },
+  { name: 'CCC GOVT.', price: 2200 },
+  { name: 'AUTO - CAD 2D/3D', price: 3500 },
+  { name: 'Digital Photo', price: 2000 },
+  { name: 'ASP.NET', price: 7000 },
+  { name: 'C, C++', price: 4500 },
+  { name: 'Hardware', price: 10000 },
+  { name: 'ADCA + DIH', price: 10000 },
+  { name: 'Busy + Tally', price: 3500 }
 ];
 
 export default function EditStudentDialog({ open, onClose, student, onSave }) {
   const [formData, setFormData] = useState({
-    id: '',
+    admissionNo: '',
     name: '',
     mobileNo: '',
     email: '',
     address: '',
     admissionDate: null,
     courseName: '',
+    coursePrice: '',
     courseCompletionDate: null,
-    certificateIssueDate: null
+    certificateIssueDate: null,
+    remarks: ''
   });
   const [errors, setErrors] = useState({});
 
   useEffect(() => {
     if (student) {
       setFormData({
-        id: student.id || '',
+        admissionNo: student.admissionNo || '',
         name: student.name || '',
         mobileNo: student.mobileNo || '',
         email: student.email || '',
         address: student.address || '',
         admissionDate: student.admissionDate ? dayjs(student.admissionDate, 'DD/MM/YYYY') : null,
         courseName: student.courseName || '',
+        coursePrice: student.coursePrice || '',
         courseCompletionDate: student.courseCompletionDate ? dayjs(student.courseCompletionDate, 'DD/MM/YYYY') : null,
-        certificateIssueDate: student.certificateIssueDate ? dayjs(student.certificateIssueDate, 'DD/MM/YYYY') : null
+        certificateIssueDate: student.certificateIssueDate ? dayjs(student.certificateIssueDate, 'DD/MM/YYYY') : null,
+        remarks: student.remarks || ''
       });
     }
   }, [student]);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'courseName') {
+      const selectedCourse = courses.find(course => course.name === value);
+      setFormData(prev => ({ 
+        ...prev, 
+        [field]: value,
+        coursePrice: selectedCourse ? selectedCourse.price : ''
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
   };
 
@@ -72,11 +93,10 @@ export default function EditStudentDialog({ open, onClose, student, onSave }) {
         <DialogTitle>Edit Student Details</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 2 }}>
           <TextField
-            label="ID"
-            value={formData.id}
-            disabled
+            label="Admission No"
+            value={formData.admissionNo}
+            onChange={(e) => handleChange('admissionNo', e.target.value)}
             fullWidth
-            sx={{ '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#666' } }}
           />
           <TextField
             label="Name"
@@ -121,11 +141,23 @@ export default function EditStudentDialog({ open, onClose, student, onSave }) {
             value={formData.courseName}
             onChange={(e) => handleChange('courseName', e.target.value)}
             fullWidth
+            SelectProps={{
+              renderValue: (selected) => selected
+            }}
           >
             {courses.map((course) => (
-              <MenuItem key={course} value={course}>{course}</MenuItem>
+              <MenuItem key={course.name} value={course.name}>
+                {course.name} - ₹{course.price}
+              </MenuItem>
             ))}
           </TextField>
+          <TextField
+            label="Course Price"
+            value={formData.coursePrice ? `₹${formData.coursePrice}` : ''}
+            disabled
+            fullWidth
+            sx={{ '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#0F766E', fontWeight: 'bold' } }}
+          />
           <DatePicker
             label="Course Completion Date"
             value={formData.courseCompletionDate}
@@ -139,6 +171,14 @@ export default function EditStudentDialog({ open, onClose, student, onSave }) {
             onChange={(date) => handleChange('certificateIssueDate', date)}
             format="DD/MM/YYYY"
             slotProps={{ textField: { fullWidth: true } }}
+          />
+          <TextField
+            label="Remarks"
+            value={formData.remarks}
+            onChange={(e) => handleChange('remarks', e.target.value)}
+            multiline
+            rows={3}
+            fullWidth
           />
         </DialogContent>
         <DialogActions>
