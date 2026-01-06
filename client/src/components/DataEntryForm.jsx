@@ -10,23 +10,34 @@ import { addStudent } from '../utils/api';
 import dayjs from 'dayjs';
 
 const courses = [
-  'Full Stack Development',
-  'Data Science',
-  'Web Development',
-  'Graphic Designing',
-  'Cloud Computing'
+  { name: 'MS - Office 2007', price: 1500 },
+  { name: 'Logo Design', price: 1000 },
+  { name: 'D.T.P', price: 2500 },
+  { name: 'Tally ERP 9', price: 1500 },
+  { name: 'KIDS Course', price: 1000 },
+  { name: 'CCC GOVT.', price: 2200 },
+  { name: 'AUTO - CAD 2D/3D', price: 3500 },
+  { name: 'Digital Photo', price: 2000 },
+  { name: 'ASP.NET', price: 7000 },
+  { name: 'C, C++', price: 4500 },
+  { name: 'Hardware', price: 10000 },
+  { name: 'ADCA + DIH', price: 10000 },
+  { name: 'Busy + Tally', price: 3500 }
 ];
 
 export default function DataEntryForm() {
   const [formData, setFormData] = useState({
+    admissionNo: '',
     name: '',
     mobileNo: '',
     email: '',
     address: '',
     admissionDate: null,
     courseName: '',
+    coursePrice: '',
     courseCompletionDate: null,
-    certificateIssueDate: null
+    certificateIssueDate: null,
+    remarks: ''
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
@@ -34,7 +45,16 @@ export default function DataEntryForm() {
   const buttonRef = useRef(null);
 
   const handleChange = (field, value) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    if (field === 'courseName') {
+      const selectedCourse = courses.find(course => course.name === value);
+      setFormData(prev => ({ 
+        ...prev, 
+        [field]: value,
+        coursePrice: selectedCourse ? selectedCourse.price : ''
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [field]: value }));
+    }
     if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
   };
 
@@ -64,17 +84,21 @@ export default function DataEntryForm() {
       };
       
       console.log('Sending data:', dataToSend);
+      console.log('Course price in form data:', formData.coursePrice);
       await addStudent(dataToSend);
       setSuccess(true);
       setFormData({
+        admissionNo: '',
         name: '',
         mobileNo: '',
         email: '',
         address: '',
         admissionDate: null,
         courseName: '',
+        coursePrice: '',
         courseCompletionDate: null,
-        certificateIssueDate: null
+        certificateIssueDate: null,
+        remarks: ''
       });
       setTimeout(() => setSuccess(false), 3000);
     } catch (error) {
@@ -97,6 +121,16 @@ export default function DataEntryForm() {
           {errors.submit && <Alert severity="error" sx={{ mb: 3 }}>{errors.submit}</Alert>}
 
           <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <TextField
+              label="Admission No"
+              value={formData.admissionNo}
+              onChange={(e) => handleChange('admissionNo', e.target.value)}
+              error={!!errors.admissionNo}
+              helperText={errors.admissionNo}
+              fullWidth
+              sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0F766E' } }}
+            />
+
             <TextField
               label="Name"
               value={formData.name}
@@ -164,11 +198,24 @@ export default function DataEntryForm() {
               helperText={errors.courseName}
               fullWidth
               sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0F766E' } }}
+              SelectProps={{
+                renderValue: (selected) => selected
+              }}
             >
               {courses.map((course) => (
-                <MenuItem key={course} value={course}>{course}</MenuItem>
+                <MenuItem key={course.name} value={course.name}>
+                  {course.name} - ₹{course.price}
+                </MenuItem>
               ))}
             </TextField>
+
+            <TextField
+              label="Course Price"
+              value={formData.coursePrice ? `₹${formData.coursePrice}` : ''}
+              disabled
+              fullWidth
+              sx={{ '& .MuiInputBase-input.Mui-disabled': { WebkitTextFillColor: '#0F766E', fontWeight: 'bold' } }}
+            />
 
             <DatePicker
               label="Course Completion Date (Optional)"
@@ -194,6 +241,16 @@ export default function DataEntryForm() {
                   sx: { '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0F766E' } }
                 }
               }}
+            />
+
+            <TextField
+              label="Remarks"
+              value={formData.remarks}
+              onChange={(e) => handleChange('remarks', e.target.value)}
+              multiline
+              rows={3}
+              fullWidth
+              sx={{ '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#0F766E' } }}
             />
 
             <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
