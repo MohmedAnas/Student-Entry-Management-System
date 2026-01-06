@@ -45,7 +45,7 @@ export default function StudentDetailDialog({ open, onClose, student }) {
                   {student.name}
                 </Typography>
                 <Typography variant="body2" sx={{ opacity: 0.9 }}>
-                  Student ID: {student.id}
+                  Admission No: {student.admissionNo}
                 </Typography>
               </Box>
             </Box>
@@ -71,6 +71,7 @@ export default function StudentDetailDialog({ open, onClose, student }) {
               <DetailRow label="Address" value={student.address} />
               <DetailRow label="Admission Date" value={student.admissionDate} />
               <DetailRow label="Course Name" value={student.courseName} />
+              <DetailRow label="Course Price" value={student.coursePrice ? `₹${student.coursePrice}` : 'Not specified'} />
               <DetailRow 
                 label="Course Completion" 
                 value={student.courseCompletionDate || 'In Progress'} 
@@ -79,6 +80,9 @@ export default function StudentDetailDialog({ open, onClose, student }) {
                 label="Certificate Status" 
                 value={student.certificateIssueDate ? `Issued on ${student.certificateIssueDate}` : 'Not Issued'} 
               />
+              {student.remarks && (
+                <DetailRow label="Remarks" value={student.remarks} />
+              )}
             </Box>
 
             <Divider sx={{ my: 3 }} />
