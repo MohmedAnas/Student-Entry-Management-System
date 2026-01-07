@@ -27,8 +27,8 @@ export default function LoginDialog({ open, onClose, onLogin }) {
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [loading, timeLeft, attempt]);
-
+  }, [loading, timeLeft, attempt, attemptDurations]);
+  
   const attemptLogin = async (attemptNumber) => {
     const duration = attemptDurations[attemptNumber];
     setTimeLeft(duration);
@@ -52,7 +52,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
       }
       
       // Wait for the full duration
-      const timer = setTimeout(() => {
+      setTimeout(() => {
         resolve(false);
       }, duration * 1000);
     });
