@@ -16,7 +16,7 @@ const courses = [
   { name: 'Tally ERP 9', price: 1500 },
   { name: 'KIDS Course', price: 1000 },
   { name: 'CCC GOVT.', price: 2200 },
-  { name: 'AUTO - CAD 2D/3D', price: 3500 },
+  { name: 'AUTO - CAD 2D/3D', price: 5000 },
   { name: 'Digital Photo', price: 2000 },
   { name: 'ASP.NET', price: 7000 },
   { name: 'C, C++', price: 4500 },
