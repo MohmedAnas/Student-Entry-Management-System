@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, TextField, Button, Box, Alert, IconButton, InputAdornment, LinearProgress, Typography } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  Button,
+  Box,
+  Alert,
+  IconButton,
+  InputAdornment,
+  LinearProgress,
+  Typography
+} from '@mui/material';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { login } from '../utils/api';
 
@@ -26,14 +38,17 @@ export default function LoginDialog({ open, onClose, onLogin }) {
         });
       }, 1000);
     }
-    return () => clearInterval(interval);
-  }, [loading, timeLeft, attempt, attemptDurations]);
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [loading, timeLeft, attempt]); // ✅ attemptDurations removed
 
   const attemptLogin = async (attemptNumber) => {
     const duration = attemptDurations[attemptNumber];
     setTimeLeft(duration);
     setProgress(0);
-    
+
     return new Promise(async (resolve) => {
       try {
         const response = await login(credentials);
@@ -50,7 +65,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
       } catch (err) {
         // Continue with timer even if request fails
       }
-      
+
       // Wait for the full duration
       setTimeout(() => {
         resolve(false);
@@ -70,7 +85,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
       const success = await attemptLogin(i);
       if (success) return;
     }
-    
+
     // All attempts failed
     setError('Server is taking too long to respond. Please try again later.');
     setLoading(false);
@@ -91,15 +106,15 @@ export default function LoginDialog({ open, onClose, onLogin }) {
             <Typography variant="body2" sx={{ mb: 2 }}>
               Attempt {attempt + 1} of 3 - {timeLeft}s remaining
             </Typography>
-            <LinearProgress 
-              variant="determinate" 
-              value={progress} 
-              sx={{ 
-                mb: 2, 
-                height: 8, 
+            <LinearProgress
+              variant="determinate"
+              value={progress}
+              sx={{
+                mb: 2,
+                height: 8,
                 borderRadius: 4,
                 '& .MuiLinearProgress-bar': { bgcolor: '#0F766E' }
-              }} 
+              }}
             />
             <Typography variant="body2" color="text.secondary">
               Free server is starting up. Please wait...
@@ -108,7 +123,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
         ) : (
           <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
             {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-            
+
             <TextField
               fullWidth
               label="Email"
@@ -118,7 +133,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
               required
               sx={{ mb: 2 }}
             />
-            
+
             <TextField
               fullWidth
               label="Password"
@@ -140,14 +155,14 @@ export default function LoginDialog({ open, onClose, onLogin }) {
                 )
               }}
             />
-            
+
             <Button
               type="submit"
               fullWidth
               variant="contained"
               disabled={loading}
-              sx={{ 
-                bgcolor: '#0F766E', 
+              sx={{
+                bgcolor: '#0F766E',
                 '&:hover': { bgcolor: '#134E4A' },
                 py: 1.5
               }}
