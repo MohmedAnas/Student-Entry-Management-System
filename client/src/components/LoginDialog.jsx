@@ -3,6 +3,8 @@ import { Dialog, DialogTitle, DialogContent, TextField, Button, Box, Alert, Icon
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { login } from '../utils/api';
 
+const attemptDurations = [60, 30, 20]; // seconds for each attempt
+
 export default function LoginDialog({ open, onClose, onLogin }) {
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
@@ -11,8 +13,6 @@ export default function LoginDialog({ open, onClose, onLogin }) {
   const [attempt, setAttempt] = useState(0);
   const [progress, setProgress] = useState(0);
   const [timeLeft, setTimeLeft] = useState(0);
-
-  const attemptDurations = [60, 30, 20]; // seconds for each attempt
 
   useEffect(() => {
     let interval;
@@ -28,7 +28,7 @@ export default function LoginDialog({ open, onClose, onLogin }) {
     }
     return () => clearInterval(interval);
   }, [loading, timeLeft, attempt, attemptDurations]);
-  
+
   const attemptLogin = async (attemptNumber) => {
     const duration = attemptDurations[attemptNumber];
     setTimeLeft(duration);
