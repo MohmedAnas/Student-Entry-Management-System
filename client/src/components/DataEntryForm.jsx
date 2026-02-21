@@ -83,8 +83,6 @@ export default function DataEntryForm() {
         certificateIssueDate: formData.certificateIssueDate ? dayjs(formData.certificateIssueDate).format('DD/MM/YYYY') : ''
       };
       
-      console.log('Sending data:', dataToSend);
-      console.log('Course price in form data:', formData.coursePrice);
       await addStudent(dataToSend);
       setSuccess(true);
       setFormData({
